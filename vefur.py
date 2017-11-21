@@ -6,28 +6,12 @@ cur = conn.cursor()
 
 
 
-def save():
-    searchWords = ["name", "score" ]
-    highScore = []
-    t = 0
-    for x in searchWords:
-
-        highScore.append(request.forms.get(x))
-        t +=1
+def save(name, score):
 
     cur.execute(
-        "Insert into highscore values('{}','{}')".format(
-
-            highScore[0],
-            highScore[1],))
+        "Insert into highscore values('{}','{}')".format(name, score))
     conn.commit()
     cur.execute("SELECT * FROM highscore")
-    for row in cur:
-        if row[0] == highScore[0]:
-            return template("online.tpl", row = row )
-        else:
-            print("blargh")
-
 
 
 @route("/")
@@ -37,16 +21,17 @@ def main ():
 
 @post("/check")
 def check ():
-    global name
-    name = request.forms.get("name")
+
+    nafn = request.forms.get("nafn")
 
     global row
     cur.execute("SELECT * FROM highscore")
     for row in cur:
-        if row[0] == name :
+        if str(nafn) in row :
             return template("online.tpl", row = row)
         else:
-            return template("looser.tpl", name = name)
+            pass
+            #return template("looser.tpl", name = name)
     cur.close()
     conn.close()
 
@@ -60,7 +45,6 @@ def doit():
     cur.close()
     conn.close()
 
-
-
-run()
+def go ():
+    run()
 

@@ -1,7 +1,7 @@
 import pygame
 import time
 import math
-import vefur.py
+import vefur
 pygame.init()
 fps = 60
 
@@ -154,6 +154,8 @@ class make_arm():
 
 
 def loop():
+    global name
+    name = input("hvert er nafn þitt(max 6 stafir): ")
     x = 0
     y = 1
     end_x = 2
@@ -208,4 +210,6 @@ def loop():
 
 loop()
 background.exit()
+vefur.save(name, counter)
+vefur.go()
 
