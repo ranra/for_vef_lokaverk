@@ -4,13 +4,14 @@
 	<title>online</title>
 </head>
 <body>
+%for x in listi:
+	<h2>Name:</h2>
+	{{x[0][0]}}
 
-<h2>Name:</h2>
-{{row[0]}}
-
-<h2>Score:</h2>
-{{row[1]}}
-
+	<h2>Score:</h2>
+	{{x[0][1]}}<br>
+	----------------------------------------------------
+%end
 
 
 
