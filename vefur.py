@@ -21,17 +21,19 @@ def main ():
 
 @post("/check")
 def check ():
-    listinn =[]
+    list = []
     nafn = request.forms.get("nafn")
 
-    global row
     cur.execute("SELECT * FROM highscore")
     for row in cur:
         if str(nafn) in row :
             list.append([row])
-            return template("online.tpl", listi = listinn)
+            return template("online.tpl", listi=list)
+
+
         else:
-            print("bragj")
+            print(row[0])
+            print("nei")
             #return template("looser.tpl", name = name)
 
 
@@ -42,6 +44,7 @@ def all ():
     cur.execute("SELECT * FROM highscore")
     for row in cur:
         list.append([row])
+
     return template("online.tpl", listi=list)
 
 
@@ -58,4 +61,3 @@ def doit():
 def go ():
     run()
 
-go()

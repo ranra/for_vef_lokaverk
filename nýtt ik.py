@@ -126,7 +126,7 @@ class make_arm():
         self.end_y = self.y + math.sin(self.angle) * self.length
 
     def change(self, change=0):
-        # set inni dictionary
+        # put in dictionary
         armValues.setdefault(self.name, [self.x, self.y, self.end_x, self.end_y])
 
         if self.name in armValues:
