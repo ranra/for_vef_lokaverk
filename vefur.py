@@ -59,5 +59,8 @@ def doit():
     cur.close()
     conn.close()
 
-run(host="0.0.0.0", port=os.environ.get('PORT'))
+if os.environ.get('Is_Heroku') is None:
+    run()
+else:
+    run(host="0.0.0.0", port=os.environ.get('PORT'))
 
