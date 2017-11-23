@@ -1,1 +1,1 @@
-web: vefur.py
+web: python vefur.py
