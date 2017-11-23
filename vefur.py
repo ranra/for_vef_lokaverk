@@ -1,3 +1,4 @@
+import os
 import pymysql
 from bottle import *
 
@@ -58,6 +59,5 @@ def doit():
     cur.close()
     conn.close()
 
-def go ():
-    run()
+  run(host="0.0.0.0", port=os.environ.get('PORT'))
 
