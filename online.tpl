@@ -2,8 +2,14 @@
 <html>
 <head>
 	<title>online</title>
+
 </head>
-<body>
+<body style="  background: url(highscore.png) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+   background-color: #cccccc;">
 %for x in listi:
 	<h2>Name:</h2>
 	{{x[0][0]}}
@@ -16,9 +22,6 @@
 
 
 
-<form action="/eyda">
-	<button name="Nytt" type="submit" >eyða</button>
-</form>
 
 <form action="/">
 	<button name="baka" type="submit">tilbaka</button>

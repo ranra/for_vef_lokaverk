@@ -1,8 +1,7 @@
 import pygame
 import time
 import math
-from random import*
-#import vefur
+import vefur
 pygame.init()
 fps = 60
 
@@ -28,12 +27,6 @@ largeFont=pygame.font.SysFont("comicsansms", 80)
 
 screen = pygame.display.set_mode((width, height))
 
-global x_rand, y_rand
-global appleThickness
-appleThickness = 30
-
-x_rand = round(randrange(0, width - appleThickness))
-y_rand = round(randrange(0, height - appleThickness))
 
 
 global counter
@@ -51,14 +44,8 @@ class background():
         text = smallFont.render("Score: " + str(counter), True, black)
         screen.blit(text, [0, 0])
 
-
-class make_square():
-    
-
-
     def button(text, x, y, width, height, inactive_color, active_color, action=None):
         cursor = pygame.mouse.get_pos()
-        global click
         click = pygame.mouse.get_pressed()
         if x + width > cursor[0] > x and y + height > cursor[1] > y:
             pygame.draw.rect(screen, active_color, (x, y, width, height))
@@ -67,6 +54,8 @@ class make_square():
                     global game
                     game = False
                     return game
+
+
 
         else:
             pygame.draw.rect(screen, inactive_color, (x, y, width, height))
@@ -93,43 +82,12 @@ class make_square():
         textRect.center = (width / 2) + x_displace, (height / 2) + y_displace
         screen.blit(textSurface, textRect)
 
-
-
-
     def exit():
         global counter
         screen.fill(white)
         background.message_to_screen("score:", red, -100, -100, "large")
         background.message_to_screen(str(counter), red, -100, 100, "large")
         pygame.display.update()
-
-
-class make_apple():
-    count = 0
-    def __init__(self, size = 30):
-        self.size = size
-
-
-    def new(self, first = count):
-        if first == 0:
-            self.x_rand = round(randrange(0, width - self.size))
-            self.y_rand = round(randrange(0, height - self.size))
-        make_apple.count = 1
-
-    def check_if_eat(self):
-        if self.x_rand+ self.size > m[0] > self.x_rand and self.y_rand + self.size > m[1] > self.y_rand:
-            if click[0] and action != None:
-                print("ja")
-                self.new(0)
-        #if m[0] > self.x_rand and m[0] < self.x_rand + size or m[1] > self.y_rand and m[1] < self.y_rand + size :
-
-    def draw(self):
-        pygame.draw.rect(screen, green, [x_rand, y_rand, appleThickness, appleThickness])
-
-
-
-
-
 
 
 # armlist2 = x1, y1
@@ -141,7 +99,7 @@ class make_arm():
     y = 1
     end_x = 2
     end_y = 3
-    def __init__(self, name, x, y, length=300, angle=0, end_x=0, end_y=0):
+    def __init__(self, name, x, y, length=100, angle=0, end_x=0, end_y=0):
         self.name = name
         self.x = x
         self.y = y
@@ -197,7 +155,7 @@ class make_arm():
 
 def loop():
     global name
-    #name = input("hvert er nafn þitt(max 6 stafir): ")
+    name = input("hvert er nafn þitt(max 6 stafir): ")
     x = 0
     y = 1
     end_x = 2
@@ -218,9 +176,6 @@ def loop():
         background.coordinates()
         background.show_score()
         background.button("exit", width-110, 10, 100, 50, green, light_green, action="exit")
-        epli = make_apple()
-        epli.new()
-        epli.draw()
 
         arm = make_arm(1, armValues[2][end_x], armValues[2][end_y])
 
@@ -230,7 +185,7 @@ def loop():
         arm.change()
 
         arm2 = make_arm(2, armValues[2][x], armValues[2][y])
-        arm2.point_at(armValues[1][x], armValues[1][y])
+        arm2.drag(armValues[1][x], armValues[1][y])
 
         arm2.get_end_xy()
         arm2.change()
@@ -241,9 +196,6 @@ def loop():
                 arm.change(1)
         except:
             pass
-
-
-
         arm.draw()
         arm2.draw()
         
@@ -258,6 +210,6 @@ def loop():
 
 loop()
 background.exit()
-#vefur.save(name, counter)
+vefur.save(name, counter)
 vefur.go()
 

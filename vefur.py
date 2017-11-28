@@ -5,6 +5,9 @@ from bottle import *
 conn = pymysql.connect(host='tsuts.tskoli.is', port=3306, user='2209922929', passwd='mypassword', db='2209922929_lokaverk')
 cur = conn.cursor()
 
+@route("/<stylesheet>")
+def server_static(stylesheet):
+    return static_file(stylesheet, root = './')
 
 
 def save(name, score):
@@ -32,16 +35,15 @@ def check ():
             return template("online.tpl", listi=list)
 
 
-        else:
-            print(row[0])
-            print("nei")
-            #return template("looser.tpl", name = name)
+    else:
+        return template("loser.tpl", name = str(nafn))
 
 
 
 @route("/all")
 def all ():
     list = []
+
     cur.execute("SELECT * FROM highscore")
     for row in cur:
         list.append([row])
@@ -59,8 +61,10 @@ def doit():
     cur.close()
     conn.close()
 
+#def go ():
+#run()
+
 if os.environ.get('Is_Heroku') is None:
     run()
 else:
     run(host="0.0.0.0", port=os.environ.get('PORT'))
-
