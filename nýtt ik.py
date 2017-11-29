@@ -1,6 +1,7 @@
 import pygame
 import time
 import math
+from random import*
 import vefur
 pygame.init()
 fps = 60
@@ -21,52 +22,96 @@ blue = (0, 0, 200)
 light_blue = (0, 0, 255)
 
 width, height = 1000, 800
+
 smallFont=pygame.font.SysFont("comicsansms", 25)
 medFont=pygame.font.SysFont("comicsansms", 50)
 largeFont=pygame.font.SysFont("comicsansms", 80)
 
 screen = pygame.display.set_mode((width, height))
 
+global x_rand, y_rand
+x_rand = round(randrange(0, width - 100))
+y_rand = round(randrange(0, height - 100))
+
+
 
 
 global counter
 counter = 0
 
-class background():
 
-    def coordinates():
-        pygame.draw.rect(screen, red, (0, height / 2, width, 1))
-        pygame.draw.rect(screen, green, (width / 2, 0, 1, height))
-
-    def show_score():
-        global counter
-        counter += 1
-        text = smallFont.render("Score: " + str(counter), True, black)
-        screen.blit(text, [0, 0])
-
-    def button(text, x, y, width, height, inactive_color, active_color, action=None):
-        cursor = pygame.mouse.get_pos()
-        click = pygame.mouse.get_pressed()
-        if x + width > cursor[0] > x and y + height > cursor[1] > y:
-            pygame.draw.rect(screen, active_color, (x, y, width, height))
-            if click[0] == 1 and action != None:
-                if action == "exit":
-                    global game
-                    game = False
-                    return game
+def coordinates():
+    pygame.draw.rect(screen, red, (0, height / 2, width, 1))
+    pygame.draw.rect(screen, green, (width / 2, 0, 1, height))
 
 
+def show_score():
+    global counter
+    text = smallFont.render("Score: " + str(counter), True, black)
+    screen.blit(text, [0, 0])
 
-        else:
-            pygame.draw.rect(screen, inactive_color, (x, y, width, height))
-        background.text_to_button(text, x, y, width, height)
 
-    def text_to_button(msg, button_x, button_y, button_width, button_height, size="small", color=black):
-        textSurf, textRect = background.text_objects(msg, color, size)
-        textRect.center = ((button_x + (button_width / 2)), (button_y + (button_height / 2)))
+def message_to_screen(text, color, y_displace = 0, x_displace = 0, size = "small"):
+
+    if size == "small":
+        textSurface = smallFont.render(text, True, color)
+    if size == "medium":
+        textSurface = medFont.render(text, True, color)
+    if size == "large":
+        textSurface = largeFont.render(text, True, color)
+    textrect= textSurface.get_rect()
+    textrect.center = (width / 2) + x_displace, (height / 2) + y_displace
+    screen.blit(textSurface, textrect)
+
+
+
+
+def exit():
+    global counter
+    screen.fill(white)
+    message_to_screen("score:", red, -100, -100, "large")
+    message_to_screen(str(counter), red, -100, 100, "large")
+    pygame.display.update()
+    pygame.QUIT
+
+
+
+class make_square():
+    def __init__(self, x, y, width, height, inactive_color, active_color):
+
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.coloron = active_color
+        self.coloroff = inactive_color
+
+    def change_pos(self):
+        self.x = round(randrange(200, width - 200))
+        self.y = round(randrange(200, height - 200))
+
+
+    def check_if_over_button(self, response = None, refresh = False):
+        if self.x + self.width > m[0] > self.x and self.y + self.height > m[1] > self.y:
+            pygame.draw.rect(screen, self.coloron, (self.x, self.y,self. width, self.height))
+            if click[0] == 1 and refresh == True:
+                global counter
+                counter +=1
+                self.change_pos()
+            elif  click[0] == 1 and refresh == False:
+                return exit()
+
+    def draw_square(self):
+        pygame.draw.rect(screen, self.coloroff, (self.x, self.y, self.width, self.height))
+
+
+
+    def text_to_button(self, msg, size="small", color=black):
+        textSurf, textRect = self.text_objects(msg, color, size)
+        textRect.center = ((self.x + (self.width / 2)), (self.y + (self.height / 2)))
         screen.blit(textSurf, textRect)
 
-    def text_objects(text, color, size):
+    def text_objects(self, text, color, size):
         if size == "small":
             textSurface = smallFont.render(text, True, color)
         if size == "medium":
@@ -76,22 +121,21 @@ class background():
         return textSurface, textSurface.get_rect()
 
 
-    def message_to_screen(msg, color, y_displace=0, x_displace=0, size="small"):
-        textSurface, textRect = background.text_objects(msg, color, size)
 
-        textRect.center = (width / 2) + x_displace, (height / 2) + y_displace
-        screen.blit(textSurface, textRect)
-
-    def exit():
-        global counter
-        screen.fill(white)
-        background.message_to_screen("score:", red, -100, -100, "large")
-        background.message_to_screen(str(counter), red, -100, 100, "large")
-        pygame.display.update()
+class make_apple(make_square):
 
 
-# armlist2 = x1, y1
-armValues = {1: [width / 2, height / 2, 0, 0], 2: [width / 2, height / 2, 0, 0], 3: [width / 2, height / 2, 0, 0]}
+    def draw(self):
+        pygame.draw.rect(screen, green, [x_rand, y_rand, appleThickness, appleThickness])
+
+
+
+
+
+
+
+
+armValues = {1: [width / 2, height / 2, 0, 0], 2: [width / 2, height / 2, 0, 0]}
 
 
 class make_arm():
@@ -99,7 +143,7 @@ class make_arm():
     y = 1
     end_x = 2
     end_y = 3
-    def __init__(self, name, x, y, length=100, angle=0, end_x=0, end_y=0):
+    def __init__(self, name, x, y, length=200, angle=0, end_x=0, end_y=0):
         self.name = name
         self.x = x
         self.y = y
@@ -162,20 +206,30 @@ def loop():
     end_y =3
     global game
     game = True
-
+    global m
     m = [0, 0]
+    #button = make_square(width - 110, 10, 100, 50, green, light_green)
+    apple = make_apple(x_rand, y_rand, 30, 30, green, light_green)
     while game:
         for event in pygame.event.get():
             if m[0] >= 0 and m[0] < width and m[1] >= 0 and m[1] < height:
+                global click
+                click = pygame.mouse.get_pressed()
                 m = pygame.mouse.get_pos()
             if event.type == pygame.QUIT:
                 game = False
 
 
         screen.fill(white)
-        background.coordinates()
-        background.show_score()
-        background.button("exit", width-110, 10, 100, 50, green, light_green, action="exit")
+        coordinates()
+        show_score()
+        apple.draw_square()
+        apple.check_if_over_button(None, True)
+
+
+        # button.draw_square()
+        # button.check_if_over_button()
+        # button.text_to_button("exit")
 
         arm = make_arm(1, armValues[2][end_x], armValues[2][end_y])
 
@@ -185,7 +239,7 @@ def loop():
         arm.change()
 
         arm2 = make_arm(2, armValues[2][x], armValues[2][y])
-        arm2.drag(armValues[1][x], armValues[1][y])
+        arm2.point_at(armValues[1][x], armValues[1][y])
 
         arm2.get_end_xy()
         arm2.change()
@@ -196,6 +250,9 @@ def loop():
                 arm.change(1)
         except:
             pass
+
+
+
         arm.draw()
         arm2.draw()
         
@@ -209,7 +266,7 @@ def loop():
 
 
 loop()
-background.exit()
+exit()
 vefur.save(name, counter)
-vefur.go()
+
 
